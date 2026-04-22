@@ -43,12 +43,10 @@ for d_idx = 1:length(deltas_test)
         
         erreurs_run = zeros(1, N_runs);
         
-        % --- MONTE-CARLO ---
+        %MONTE-CARLO
         for run = 1:N_runs
-            % Phase initiale aléatoire (crucial pour une bonne moyenne stat)
             phase = rand() * 2 * pi;
             
-            % Génération du signal pur + Bruit Blanc Gaussien
             sig_pur = A * cos(2*pi*f_vrai*t + phase);
             bruit = sigma_n * randn(1, M);
             sig_bruite = sig_pur + bruit;
@@ -56,8 +54,7 @@ for d_idx = 1:length(deltas_test)
             % FFT
             P1 = abs(fft(sig_bruite .* win'));
             
-            % Pour éviter que le bruit ne fasse sauter le max de case à faible SNR, 
-            % on fixe la recherche autour du vrai bin connu
+
             l = bin_k + 1; 
             
             % Extraction des 3 points (Voisin Gauche, Centre, Voisin Droit)
@@ -69,7 +66,6 @@ for d_idx = 1:length(deltas_test)
             alpha_3 = (X_d - X_g) / (X_g + X_d + 2*X_c);
             delta_estime = 2 * alpha_3;
             
-            % Stockage de l'erreur absolue
             erreurs_run(run) = delta_estime - delta_vrai;
         end
         
@@ -77,7 +73,7 @@ for d_idx = 1:length(deltas_test)
         var_sim(s_idx) = var(erreurs_run);
     end
     
-    % --- AFFICHAGE DU SUBPLOT ---
+    %AFFICHAGE DU SUBPLOT
     subplot(2, 2, d_idx);
     semilogy(snr_db, crlb, 'k--', 'LineWidth', 2); hold on;
     semilogy(snr_db, var_sim, 'b.', 'MarkerSize', 15);
@@ -87,7 +83,6 @@ for d_idx = 1:length(deltas_test)
     ylabel('Variance (Log)');
     grid on;
     
-    % Fixation stricte des axes pour comparer loyalement avec l'image 2 pts
     ylim([10^-16, 10^-6]); 
     xlim([40, 100]);
     

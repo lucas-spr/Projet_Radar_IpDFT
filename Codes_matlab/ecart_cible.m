@@ -6,10 +6,10 @@ fs = 1000;
 t = 0:1/fs:(M-1)/fs;
 win = hann(M, 'periodic');
 
-% Cible fixée à delta = 0.42 (comme sur votre image)
+% Cible fixée à delta = 0.42
 % bin_k = 15;
 % delta_cible = 0.42;
-% --- LES PIRES CONDITIONS POUR LE RADAR ---
+%PIRES CONDITIONS POUR LE RADAR
 bin_k = 2;          % Cible très très proche (Basse fréquence, forte interférence)
 delta_cible = 0.42; % Cible au bord de la case
 
@@ -41,15 +41,14 @@ for i = 1:Nb_essais
     a3 = (X_d - X_g) / (X_g + X_d + 2*X_c);
     delta_estime = 2 * a3;
     
-    % Stockage
     deltas_calcules(i) = delta_estime;
     erreurs(i) = delta_estime - delta_cible;
 end
 
-%% Affichage (Exactement comme votre capture d'écran)
+%% Affichage
 figure('Name', 'Figure 3: Valeurs WMIpDFT Brutes (3 points)', 'Color', 'white');
 
-% --- Graphe 1 : Valeurs brutes ---
+%Graphe 1 : Valeurs brutes
 subplot(2,1,1);
 plot(1:Nb_essais, deltas_calcules, 'b.-', 'MarkerSize', 10, 'LineWidth', 1); hold on;
 yline(delta_cible, 'r--', 'LineWidth', 2);
@@ -57,10 +56,9 @@ title(sprintf('Valeurs de Delta calculées par WMIpDFT (Cible : %.4f)', delta_ci
 ylabel('Delta Calculé');
 legend('Valeur WMIpDFT (à chaque essai)', 'Cible Théorique', 'Location', 'Best');
 grid on;
-% On force l'axe Y pour avoir le même visuel que votre image
 ylim([delta_cible-0.0001, delta_cible+0.0001]);
 
-% --- Graphe 2 : Erreur ---
+%Graphe 2 : Erreur
 subplot(2,1,2);
 plot(1:Nb_essais, erreurs, 'k', 'LineWidth', 1.5);
 title('Erreur de l''estimation (Ecart par rapport à la cible)');
